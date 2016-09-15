@@ -402,14 +402,14 @@ end
 mags(g::FactorGraph) = Float64[mag(v) for v in g.vnodes]
 mags_noreinf(g::FactorGraphKSAT) = Float64[mag_noreinf(v) for v in g.vnodes]
 
-function solve(cnfname::AbstractString; kw...)
+function solve(cnfname::String; kw...)
     cnf = readcnf(cnfname)
     solve(cnf; kw...)
 end
 
 function solve(; N::Int=1000, α::Float64=3., k::Int = 4, seed_cnf::Int=-1, kw...)
     seed_cnf > 0 && srand(seed_cnf)
-    cnf = CNF(N, k, α)
+    cnf = randomcnf(N=N, k=k, α=α)
     solve(cnf; kw...)
 end
 
@@ -456,28 +456,4 @@ function solve(cnf::CNF; maxiters = 5000, ϵ::Float64 = 1e-4,
 
     E = energy(g)
     return E, getσ(mags(g))
-end
-
-using LittleScienceTools.Measuring
-
-type Params
-    α; N; k
-end
-
-function span(; αlist=[9.4:0.02:9.8;], nsamples=10, k=4, N=10000, resfile="res.dat", kw...)
-    obs = ObsTable(Params)
-    for α in αlist
-        par = Params(α, N, k)
-        for _=1:nsamples
-            try
-                E, _  = solve(;α=α, method=:converge, rstep=0.,k=k, N=N, kw...)
-                obs[par][:Psucc] &= E == 0 ? 1 : 0
-            catch
-                obs[par][:Psucc] &= 0
-            end
-            open(resfile, "w") do f
-                print(f, obs)
-            end
-        end
-    end
 end
