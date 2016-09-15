@@ -2,7 +2,7 @@
 Heuristic algorithms based on message passing for boolean satisfaction problems (SAT).
 ## Installation
 ```
-Pkg.clone("...")
+Pkg.clone("https://github.com/CarloLucibello/SAT.jl")
 ```
 ## Usage
 `solve` is the main function, and a solver `method` can be chosen
