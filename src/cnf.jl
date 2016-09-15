@@ -1,13 +1,20 @@
+"""
+A type representing a conjunctive normal form.
+"""
 type CNF
     N::Int
     M::Int
     clauses::Vector{Vector{Int}}
 end
 
-function CNF(N::Int, k::Int, α::Float64; seed::Int=-1)
-    if seed > 0
-        srand(seed)
-    end
+"""
+    randomcnf(; N = 100, k = 3, α = 0.1, seed = -1)
+
+Generates a random instance of the k-SAT problem, with `N` variables
+and `αN` clauses.
+"""
+function randomcnf(; N::Int = 100, k::Int = 3, α::Float64 = 0.1, seed::Int=-1)
+    seed > 0 && srand(seed)
     M = round(Int, N*α)
     clauses = Vector{Vector{Int}}()
     for a=1:M
@@ -22,7 +29,12 @@ function CNF(N::Int, k::Int, α::Float64; seed::Int=-1)
     return CNF(N, M, clauses)
 end
 
-function readcnf(fname::AbstractString)
+"""
+    readcnf(fname::String)
+
+Reads a CNF from file `fname`.
+"""
+function readcnf(fname::String)
     f = open(fname, "r")
     head = split(readline(f))
     N, M = parse(Int, head[3]), parse(Int, head[4])
@@ -35,7 +47,13 @@ function readcnf(fname::AbstractString)
     return CNF(N, M, clauses)
 end
 
-function writecnf(fname::AbstractString, cnf::CNF)
+
+"""
+    writecnf(fname::String, cnf::CNF)
+
+Writes `cnf` to file `fname`.
+"""
+function writecnf(fname::String, cnf::CNF)
     f = open(fname, "w")
     println(f, "p cnf $(cnf.N) $(cnf.M)")
     for c in cnf.clauses
