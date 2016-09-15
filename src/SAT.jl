@@ -1,5 +1,8 @@
 module SAT
 
-# package code goes here
+export solve
+
+include("cnf.jl")
+include("bp.jl")
 
 end # module
