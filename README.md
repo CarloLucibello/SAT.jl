@@ -1,4 +1,8 @@
 # SAT
+
+[![Build Status](https://travis-ci.org/CarloLucibello/SAT.jl.svg?branch=master)](https://travis-ci.org/CarloLucibello/SAT.jl)
+[![codecov.io](http://codecov.io/github/CarloLucibello/SAT.jl/coverage.svg?branch=master)](http://codecov.io/github/CarloLucibello/SAT.jl?branch=master)
+
 Heuristic algorithms based on message passing for boolean satisfaction problems (SAT).
 ## Installation
 ```
