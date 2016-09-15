@@ -1,7 +1,7 @@
 using SAT
 using Base.Test
 
-E, σ = solve(N=10000, α=9.6, k=4, seed_cnf=19, rstep=0.0002, maxiters=1000);
+E, σ = solve(N=10000, α=9.6, k=4, seed_cnf=19, rstep=0.001, maxiters=1000);
 @test E == 0
 
 # DECIMATION NOT WORKING
