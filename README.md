@@ -3,33 +3,39 @@
 [![Build Status](https://travis-ci.org/CarloLucibello/SAT.jl.svg?branch=master)](https://travis-ci.org/CarloLucibello/SAT.jl)
 [![codecov.io](http://codecov.io/github/CarloLucibello/SAT.jl/coverage.svg?branch=master)](http://codecov.io/github/CarloLucibello/SAT.jl?branch=master)
 
-Heuristic algorithms based on message passing for boolean satisfaction problems (SAT).
+Heuristic algorithms based on message passing for solving large instances of boolean satisfaction problems (SAT).
+
 ## Installation
 ```
 Pkg.clone("https://github.com/CarloLucibello/SAT.jl")
 ```
-## Usage
-`solve` is the main function, and a solver `method` can be chosen
-beetween `:reinforcement` (default),  `:decimation`
 
-### Reinforcement
-Solve random instance with BP inspired procedures.
+## Basic usage
+```julia
+using SAT
+cnf = randomcnf(N=1000, k=3, α=0.5) # generate a random k-SAT instance
+sol = solve(cnf)
+```
+## CNF
+Formulas in conjunctive normal form (![CNF](https://en.wikipedia.org/wiki/Conjunctive_normal_form)) can be either read/written to files
+```julia
+cnf = readcnf("formula.cnf")
+writecnf("formula.cnf", cnf)
+```
+or generated randomly from the k-SAT ensemble
+```julia
+cnf = randomcnf(N=1000, k=4, α=0.5, seed=17)
+```
 
+## Belief Propagation
+Solve random instance with Belief Propagation (BP) inspired procedures.
+
+### reinforcement
 `r` is the initial value of the reinforcement parameter (`r=0.` default).
 `rstep` determines its moltiplicative increment.
 ```julia
-E, σ = KSAT.solve(N=10000, α=9.6, k=4, seed_cnf=19, rstep=0.0002, maxiters=1000);
+E, σ = solve(cnf, rstep=0.001, maxiters=1000);
 ```
-
-Read file in CNF format and solve with BP + reinforcement
-```julia
-E, σ = KSAT.solve("file.cnf", rstep=0.01, maxiters=1000);
-```
-
-If having errors, try to reduce `reinf_step`.
-
-### Decimation
-**NOT WORKING AT THE MOMENT**  
-After each convergence of the BP algorithm the `r*N` most biased variables are fixed.
-```julia
-E, σ = KSAT.solve(method=:decimation, N=10000,α=9.6, k=4, seed_cnf=19, r=0.02, maxiters=1000);
+If having errors or unable to find a solution, try to reduce `rstep`.
+### decimation
+TODO
