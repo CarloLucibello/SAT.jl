@@ -7,6 +7,12 @@ type CNF
     clauses::Vector{Vector{Int}}
 end
 
+function CNF(clauses::Vector{Vector{Int}})
+    M = length(a)
+    N = maximum(maximum.(abs.(clauses)))
+    return CNF(N, M, clauses)
+end
+
 """
     randomcnf(; N=100, k=3, α=0.1, seed=-1)
 
