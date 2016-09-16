@@ -1,10 +1,10 @@
-# SAT
+# SAT.jl
 
 [![Build Status](https://travis-ci.org/CarloLucibello/SAT.jl.svg?branch=master)](https://travis-ci.org/CarloLucibello/SAT.jl)
 [![codecov.io](http://codecov.io/github/CarloLucibello/SAT.jl/coverage.svg?branch=master)](http://codecov.io/github/CarloLucibello/SAT.jl?branch=master)
 [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://CarloLucibello.github.io/SAT.jl/latest)
 
-Heuristic algorithms based on message passing for solving large instances of boolean satisfaction problems ([SAT](https://en.wikipedia.org/wiki/Boolean_satisfiability_problem)).
+Heuristic algorithms based on message passing for solving large instances of boolean satisfaction problems ([SAT.jl](https://en.wikipedia.org/wiki/Boolean_satisfiability_problem)), written in julia.
 Consider using [PicoSAT.jl](https://github.com/jakebolewski/PicoSAT.jl) if you are looking
 for an exact solver.
 
