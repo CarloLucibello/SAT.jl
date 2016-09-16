@@ -1,0 +1,64 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "SAT\n\n\n \n\n\nHeuristic algorithms based on message passing for solving large instances of boolean satisfaction problems (\nSAT\n). Consider using \nPicoSAT.jl\n if you are looking for an exact solver.\n\n\n\n\nInstallation\n\n\nPkg.clone(\nhttps://github.com/CarloLucibello/SAT.jl\n)\n\n\n\n\n\n\nBasic usage\n\n\nusing SAT\ncnf = randomcnf(N=1000, k=3, \u03b1=0.5) # generate a random k-SAT instance\n\u03c3 = solve(cnf)\n\n\n\n\nThe solution \n\u03c3\n will be a vector of \nN\n  ints taking values \n-1\n or \n+1\n.\n\n\n\n\nFormulas\n\n\nFormulas in conjunctive normal form (\nCNF\n) can be either read/written to files\n\n\ncnf = readcnf(\nformula.cnf\n)\nwritecnf(\nformula.cnf\n, cnf)\n\n\n\n\nor randomly generated from the k-SAT ensemble\n\n\ncnf = randomcnf(N=1000, k=4, \u03b1=0.5, seed=17)\n\n\n\n\n\n\nSolvers\n\n\n\n\nBP + reinforcement (default)\n\n\nSolve random instance with Belief Propagation (BP) inspired procedures. \nr\n is the initial value of the reinforcement parameter (\nr=0.\n default). \nrstep\n determines its moltiplicative increment.\n\n\n\u03c3 = solve(cnf, rstep=0.001, maxiters=1000);\n\n\n\n\nIf having errors or unable to find a solution, try to reduce \nrstep\n.\n\n\n\n\ndecimation\n\n\nTODO", 
+            "title": "Getting Started"
+        }, 
+        {
+            "location": "/#sat", 
+            "text": "Heuristic algorithms based on message passing for solving large instances of boolean satisfaction problems ( SAT ). Consider using  PicoSAT.jl  if you are looking for an exact solver.", 
+            "title": "SAT"
+        }, 
+        {
+            "location": "/#installation", 
+            "text": "Pkg.clone( https://github.com/CarloLucibello/SAT.jl )", 
+            "title": "Installation"
+        }, 
+        {
+            "location": "/#basic-usage", 
+            "text": "using SAT\ncnf = randomcnf(N=1000, k=3, \u03b1=0.5) # generate a random k-SAT instance\n\u03c3 = solve(cnf)  The solution  \u03c3  will be a vector of  N   ints taking values  -1  or  +1 .", 
+            "title": "Basic usage"
+        }, 
+        {
+            "location": "/#formulas", 
+            "text": "Formulas in conjunctive normal form ( CNF ) can be either read/written to files  cnf = readcnf( formula.cnf )\nwritecnf( formula.cnf , cnf)  or randomly generated from the k-SAT ensemble  cnf = randomcnf(N=1000, k=4, \u03b1=0.5, seed=17)", 
+            "title": "Formulas"
+        }, 
+        {
+            "location": "/#solvers", 
+            "text": "", 
+            "title": "Solvers"
+        }, 
+        {
+            "location": "/#bp-reinforcement-default", 
+            "text": "Solve random instance with Belief Propagation (BP) inspired procedures.  r  is the initial value of the reinforcement parameter ( r=0.  default).  rstep  determines its moltiplicative increment.  \u03c3 = solve(cnf, rstep=0.001, maxiters=1000);  If having errors or unable to find a solution, try to reduce  rstep .", 
+            "title": "BP + reinforcement (default)"
+        }, 
+        {
+            "location": "/#decimation", 
+            "text": "TODO", 
+            "title": "decimation"
+        }, 
+        {
+            "location": "/formulas/", 
+            "text": "Formulas\n\n\n#\n\n\nSAT.CNF\n \n \nType\n.\n\n\nA type representing a conjunctive normal form.\n\n\nsource\n\n\n#\n\n\nSAT.randomcnf\n \n \nMethod\n.\n\n\nrandomcnf(; N=100, k=3, \u03b1=0.1, seed=-1, planted = Vector{Vector{Int}}())\n\n\n\n\nGenerates a random instance of the k-SAT problem, with \nN\n variables and \n\u03b1N\n clauses.\n\n\nAny configuration in \nplanted\n is guaranteed to be a solution of the problem.\n\n\nsource\n\n\n#\n\n\nSAT.readcnf\n \n \nMethod\n.\n\n\nreadcnf(fname::String)\n\n\n\n\nReads a CNF from file \nfname\n.\n\n\nsource\n\n\n#\n\n\nSAT.writecnf\n \n \nMethod\n.\n\n\nwritecnf(fname::String, cnf::CNF)\n\n\n\n\nWrites \ncnf\n to file \nfname\n.\n\n\nsource", 
+            "title": "Formulas"
+        }, 
+        {
+            "location": "/formulas/#formulas", 
+            "text": "#  SAT.CNF     Type .  A type representing a conjunctive normal form.  source  #  SAT.randomcnf     Method .  randomcnf(; N=100, k=3, \u03b1=0.1, seed=-1, planted = Vector{Vector{Int}}())  Generates a random instance of the k-SAT problem, with  N  variables and  \u03b1N  clauses.  Any configuration in  planted  is guaranteed to be a solution of the problem.  source  #  SAT.readcnf     Method .  readcnf(fname::String)  Reads a CNF from file  fname .  source  #  SAT.writecnf     Method .  writecnf(fname::String, cnf::CNF)  Writes  cnf  to file  fname .  source", 
+            "title": "Formulas"
+        }, 
+        {
+            "location": "/solvers/", 
+            "text": "Solvers\n\n\n#\n\n\nSAT.energy\n \n \nMethod\n.\n\n\nenergy(cnf, \u03c3)\n\n\n\n\nCounts the number of violated clauses.\n\n\nsource\n\n\n#\n\n\nSAT.solve\n \n \nMethod\n.\n\n\nsolve(cnf::CNF; maxiters = 5000, \u03f5::Float64 = 1e-4,\n            method = :reinforcement, #[:reinforcement, :decimation]\n            r::Float64 = 0., rstep::Float64= 0.001,\n            \u03b3::Float64 = 0., \u03b3step::Float64=0.,\n            \u03b3max = 0.5,\n            altsolv::Bool = true,\n            seed::Int = -1)\n\n\n\n\nTry to solve an instance of boolean satisfiability problem.\n\n\nsource", 
+            "title": "Solvers"
+        }, 
+        {
+            "location": "/solvers/#solvers", 
+            "text": "#  SAT.energy     Method .  energy(cnf, \u03c3)  Counts the number of violated clauses.  source  #  SAT.solve     Method .  solve(cnf::CNF; maxiters = 5000, \u03f5::Float64 = 1e-4,\n            method = :reinforcement, #[:reinforcement, :decimation]\n            r::Float64 = 0., rstep::Float64= 0.001,\n            \u03b3::Float64 = 0., \u03b3step::Float64=0.,\n            \u03b3max = 0.5,\n            altsolv::Bool = true,\n            seed::Int = -1)  Try to solve an instance of boolean satisfiability problem.  source", 
+            "title": "Solvers"
+        }
+    ]
+}
