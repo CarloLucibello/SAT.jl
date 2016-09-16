@@ -1,5 +1,5 @@
 using Documenter
-# include("../src/LightGraphs.jl")
+# include("../src/SAT.jl")
 using SAT
 
 # index is equal to the README for the time being

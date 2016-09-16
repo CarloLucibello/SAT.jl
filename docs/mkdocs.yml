@@ -1,4 +1,4 @@
-site_name: LightGraphs.jl
+site_name: SAT.jl
 site_author: Carlo Lucibello
 repo_url: https://github.com/CarloLucibello/SAT.jl/
 docs_dir: 'build'
