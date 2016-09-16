@@ -20,7 +20,19 @@ cnf = randomcnf(N=1000, k=3, α=0.5) # generate a random k-SAT instance
 σ = solve(cnf)
 ```
 The solution `σ` will be a vector of `N`  ints taking values `-1` or `+1`.
-## CNF
+## Formulas
+```@index
+Order = [:type, :function]
+Pages   = ["formulas.md"]
+
+```@index
+Order = [:type, :function]
+Pages   = ["formulas.md"]
+```
+```@index
+Order = [:type, :function]
+Pages   = ["formulas.md"]
+```
 Formulas in conjunctive normal form ([CNF](https://en.wikipedia.org/wiki/Conjunctive_normal_form)) can be either read/written to files
 ```julia
 cnf = readcnf("formula.cnf")
@@ -31,10 +43,10 @@ or randomly generated from the k-SAT ensemble
 cnf = randomcnf(N=1000, k=4, α=0.5, seed=17)
 ```
 
-## Belief Propagation
-Solve random instance with Belief Propagation (BP) inspired procedures.
+## Solvers
 
-### reinforcement
+### BP + reinforcement (default)
+Solve random instance with Belief Propagation (BP) inspired procedures.
 `r` is the initial value of the reinforcement parameter (`r=0.` default).
 `rstep` determines its moltiplicative increment.
 ```julia
