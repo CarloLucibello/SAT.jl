@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/CarloLucibello/SAT.jl.svg?branch=master)](https://travis-ci.org/CarloLucibello/SAT.jl)
 [![codecov.io](http://codecov.io/github/CarloLucibello/SAT.jl/coverage.svg?branch=master)](http://codecov.io/github/CarloLucibello/SAT.jl?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/CarloLucibello/SAT.jl/badge.svg?branch=master)](https://coveralls.io/github/CarloLucibello/SAT.jl?branch=master)
 
 Heuristic algorithms based on message passing for solving large instances of boolean satisfaction problems ([SAT](https://en.wikipedia.org/wiki/Boolean_satisfiability_problem)).
 Consider using [PicoSAT.jl](https://github.com/jakebolewski/PicoSAT.jl) if you are looking
