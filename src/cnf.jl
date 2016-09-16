@@ -8,7 +8,7 @@ type CNF
 end
 
 function CNF(clauses::Vector{Vector{Int}})
-    M = length(a)
+    M = length(clauses)
     N = maximum(maximum.(abs.(clauses)))
     return CNF(N, M, clauses)
 end

@@ -17,8 +17,9 @@ Pkg.clone("https://github.com/CarloLucibello/SAT.jl")
 ```julia
 using SAT
 cnf = randomcnf(N=1000, k=3, α=0.5) # generate a random k-SAT instance
-sol = solve(cnf)
+σ = solve(cnf)
 ```
+The solution `σ` will be a vector of `N`  ints taking values `-1` or `+1`.
 ## CNF
 Formulas in conjunctive normal form ([CNF](https://en.wikipedia.org/wiki/Conjunctive_normal_form)) can be either read/written to files
 ```julia
@@ -37,7 +38,7 @@ Solve random instance with Belief Propagation (BP) inspired procedures.
 `r` is the initial value of the reinforcement parameter (`r=0.` default).
 `rstep` determines its moltiplicative increment.
 ```julia
-E, σ = solve(cnf, rstep=0.001, maxiters=1000);
+σ = solve(cnf, rstep=0.001, maxiters=1000);
 ```
 If having errors or unable to find a solution, try to reduce `rstep`.
 ### decimation

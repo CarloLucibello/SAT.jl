@@ -347,6 +347,11 @@ function converge!(g::FactorGraph; maxiters::Int = 100, ϵ::Float64=1e-5
     return iters
 end
 
+"""
+    energy(cnf, σ)
+
+Counts the number of violated clauses.
+"""
 function energy(cnf::CNF, σ)
     E = 0
     for c in cnf.clauses
@@ -443,6 +448,5 @@ function solve(cnf::CNF; maxiters = 5000, ϵ::Float64 = 1e-4,
         error("invalid method ", method)
     end
 
-    E = energy(g)
-    return E, getσ(mags(g))
+    return getσ(mags(g))
 end
