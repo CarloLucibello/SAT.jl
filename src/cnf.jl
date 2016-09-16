@@ -8,7 +8,7 @@ type CNF
 end
 
 """
-    randomcnf(; N = 100, k = 3, α = 0.1, seed = -1)
+    randomcnf(; N=100, k=3, α=0.1, seed=-1)
 
 Generates a random instance of the k-SAT problem, with `N` variables
 and `αN` clauses.
