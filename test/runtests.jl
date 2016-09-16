@@ -1,7 +1,7 @@
 using SAT
 using Base.Test
 
-cnf = CNF([[1, -5, 4], [-1, 5, 3, 4], [-3, -4]])
+cnf = CNF(Vector{Int}[[1, -5, 4], [-1, 5, 3, 4], [-3, -4]])
 @test cnf.M == 3
 @test cnf.N == 5
 σ = solve(cnf);

@@ -407,6 +407,17 @@ end
 mags(g::FactorGraph) = Float64[mag(v) for v in g.vnodes]
 mags_noreinf(g::FactorGraphKSAT) = Float64[mag_noreinf(v) for v in g.vnodes]
 
+"""
+    solve(cnf::CNF; maxiters = 5000, ϵ::Float64 = 1e-4,
+                method = :reinforcement, #[:reinforcement, :decimation]
+                r::Float64 = 0., rstep::Float64= 0.001,
+                γ::Float64 = 0., γstep::Float64=0.,
+                γmax = 0.5,
+                altsolv::Bool = true,
+                seed::Int = -1)
+
+Try to solve an instance of boolean satisfiability problem.
+"""
 function solve(cnf::CNF; maxiters = 5000, ϵ::Float64 = 1e-4,
                 method = :reinforcement, #[:reinforcement, :decimation]
                 r::Float64 = 0., rstep::Float64= 0.001,
