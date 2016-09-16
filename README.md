@@ -2,8 +2,11 @@
 
 [![Build Status](https://travis-ci.org/CarloLucibello/SAT.jl.svg?branch=master)](https://travis-ci.org/CarloLucibello/SAT.jl)
 [![codecov.io](http://codecov.io/github/CarloLucibello/SAT.jl/coverage.svg?branch=master)](http://codecov.io/github/CarloLucibello/SAT.jl?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/CarloLucibello/SAT.jl/badge.svg?branch=master)](https://coveralls.io/github/CarloLucibello/SAT.jl?branch=master)
 
-Heuristic algorithms based on message passing for solving large instances of boolean satisfaction problems (SAT).
+Heuristic algorithms based on message passing for solving large instances of boolean satisfaction problems ([SAT](https://en.wikipedia.org/wiki/Boolean_satisfiability_problem)).
+Consider using [PicoSAT.jl](https://github.com/jakebolewski/PicoSAT.jl) if you are looking
+for an exact solver.
 
 ## Installation
 ```
@@ -17,12 +20,12 @@ cnf = randomcnf(N=1000, k=3, α=0.5) # generate a random k-SAT instance
 sol = solve(cnf)
 ```
 ## CNF
-Formulas in conjunctive normal form (![CNF](https://en.wikipedia.org/wiki/Conjunctive_normal_form)) can be either read/written to files
+Formulas in conjunctive normal form ([CNF](https://en.wikipedia.org/wiki/Conjunctive_normal_form)) can be either read/written to files
 ```julia
 cnf = readcnf("formula.cnf")
 writecnf("formula.cnf", cnf)
 ```
-or generated randomly from the k-SAT ensemble
+or randomly generated from the k-SAT ensemble
 ```julia
 cnf = randomcnf(N=1000, k=4, α=0.5, seed=17)
 ```
