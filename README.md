@@ -9,7 +9,7 @@ Consider using [PicoSAT.jl](https://github.com/jakebolewski/PicoSAT.jl) if you a
 for an exact solver.
 
 ## Installation
-```
+```julia
 Pkg.clone("https://github.com/CarloLucibello/SAT.jl")
 ```
 
@@ -17,9 +17,10 @@ Pkg.clone("https://github.com/CarloLucibello/SAT.jl")
 ```julia
 using SAT
 cnf = randomcnf(N=1000, k=3, α=0.5) # generate a random k-SAT instance
-sol = solve(cnf)
+σ = solve(cnf)
 ```
-## CNF
+The solution `σ` will be a vector of `N`  ints taking values `-1` or `+1`.
+## Formulas
 Formulas in conjunctive normal form ([CNF](https://en.wikipedia.org/wiki/Conjunctive_normal_form)) can be either read/written to files
 ```julia
 cnf = readcnf("formula.cnf")
@@ -30,14 +31,14 @@ or randomly generated from the k-SAT ensemble
 cnf = randomcnf(N=1000, k=4, α=0.5, seed=17)
 ```
 
-## Belief Propagation
-Solve random instance with Belief Propagation (BP) inspired procedures.
+## Solvers
 
-### reinforcement
+### BP + reinforcement (default)
+Solve random instance with Belief Propagation (BP) inspired procedures.
 `r` is the initial value of the reinforcement parameter (`r=0.` default).
 `rstep` determines its moltiplicative increment.
 ```julia
-E, σ = solve(cnf, rstep=0.001, maxiters=1000);
+σ = solve(cnf, rstep=0.001, maxiters=1000);
 ```
 If having errors or unable to find a solution, try to reduce `rstep`.
 ### decimation

@@ -1,6 +1,6 @@
 module SAT
 
-export solve
+export solve, energy
 
 export CNF, randomcnf, readcnf, writecnf
 
