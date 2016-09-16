@@ -9,7 +9,7 @@ Consider using [PicoSAT.jl](https://github.com/jakebolewski/PicoSAT.jl) if you a
 for an exact solver.
 
 ## Installation
-```
+```julia
 Pkg.clone("https://github.com/CarloLucibello/SAT.jl")
 ```
 
@@ -21,18 +21,6 @@ cnf = randomcnf(N=1000, k=3, α=0.5) # generate a random k-SAT instance
 ```
 The solution `σ` will be a vector of `N`  ints taking values `-1` or `+1`.
 ## Formulas
-```@index
-Order = [:type, :function]
-Pages   = ["formulas.md"]
-
-```@index
-Order = [:type, :function]
-Pages   = ["formulas.md"]
-```
-```@index
-Order = [:type, :function]
-Pages   = ["formulas.md"]
-```
 Formulas in conjunctive normal form ([CNF](https://en.wikipedia.org/wiki/Conjunctive_normal_form)) can be either read/written to files
 ```julia
 cnf = readcnf("formula.cnf")
