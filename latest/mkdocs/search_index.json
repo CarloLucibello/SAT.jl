@@ -42,22 +42,22 @@
         }, 
         {
             "location": "/formulas/", 
-            "text": "Formulas\n\n\n#\n\n\nSAT.CNF\n \n \nType\n.\n\n\nA type representing a conjunctive normal form.\n\n\nsource\n\n\n#\n\n\nSAT.randomcnf\n \n \nMethod\n.\n\n\nrandomcnf(; N=100, k=3, \u03b1=0.1, seed=-1, planted = Vector{Vector{Int}}())\n\n\n\n\nGenerates a random instance of the k-SAT problem, with \nN\n variables and \n\u03b1N\n clauses.\n\n\nAny configuration in \nplanted\n is guaranteed to be a solution of the problem.\n\n\nsource\n\n\n#\n\n\nSAT.readcnf\n \n \nMethod\n.\n\n\nreadcnf(fname::String)\n\n\n\n\nReads a CNF from file \nfname\n.\n\n\nsource\n\n\n#\n\n\nSAT.writecnf\n \n \nMethod\n.\n\n\nwritecnf(fname::String, cnf::CNF)\n\n\n\n\nWrites \ncnf\n to file \nfname\n.\n\n\nsource", 
+            "text": "Formulas\n\n\n#\n\n\nSAT.CNF\n \n \nType\n.\n\n\nA type representing a conjunctive normal form.\n\n\nsource\n\n\n#\n\n\nSAT.energy\n \n \nMethod\n.\n\n\nenergy(cnf, \u03c3)\n\n\n\n\nCounts the number of violated clauses.\n\n\nsource\n\n\n#\n\n\nSAT.randomcnf\n \n \nMethod\n.\n\n\nrandomcnf(; N=100, k=3, \u03b1=0.1, seed=-1, planted = Vector{Vector{Int}}())\n\n\n\n\nGenerates a random instance of the k-SAT problem, with \nN\n variables and \n\u03b1N\n clauses.\n\n\nAny configuration in \nplanted\n is guaranteed to be a solution of the problem.\n\n\nsource\n\n\n#\n\n\nSAT.readcnf\n \n \nMethod\n.\n\n\nreadcnf(fname::String)\n\n\n\n\nReads a CNF from file \nfname\n.\n\n\nsource\n\n\n#\n\n\nSAT.writecnf\n \n \nMethod\n.\n\n\nwritecnf(fname::String, cnf::CNF)\n\n\n\n\nWrites \ncnf\n to file \nfname\n.\n\n\nsource", 
             "title": "Formulas"
         }, 
         {
             "location": "/formulas/#formulas", 
-            "text": "#  SAT.CNF     Type .  A type representing a conjunctive normal form.  source  #  SAT.randomcnf     Method .  randomcnf(; N=100, k=3, \u03b1=0.1, seed=-1, planted = Vector{Vector{Int}}())  Generates a random instance of the k-SAT problem, with  N  variables and  \u03b1N  clauses.  Any configuration in  planted  is guaranteed to be a solution of the problem.  source  #  SAT.readcnf     Method .  readcnf(fname::String)  Reads a CNF from file  fname .  source  #  SAT.writecnf     Method .  writecnf(fname::String, cnf::CNF)  Writes  cnf  to file  fname .  source", 
+            "text": "#  SAT.CNF     Type .  A type representing a conjunctive normal form.  source  #  SAT.energy     Method .  energy(cnf, \u03c3)  Counts the number of violated clauses.  source  #  SAT.randomcnf     Method .  randomcnf(; N=100, k=3, \u03b1=0.1, seed=-1, planted = Vector{Vector{Int}}())  Generates a random instance of the k-SAT problem, with  N  variables and  \u03b1N  clauses.  Any configuration in  planted  is guaranteed to be a solution of the problem.  source  #  SAT.readcnf     Method .  readcnf(fname::String)  Reads a CNF from file  fname .  source  #  SAT.writecnf     Method .  writecnf(fname::String, cnf::CNF)  Writes  cnf  to file  fname .  source", 
             "title": "Formulas"
         }, 
         {
             "location": "/solvers/", 
-            "text": "Solvers\n\n\n#\n\n\nSAT.energy\n \n \nMethod\n.\n\n\nenergy(cnf, \u03c3)\n\n\n\n\nCounts the number of violated clauses.\n\n\nsource\n\n\n#\n\n\nSAT.solve\n \n \nMethod\n.\n\n\nsolve(cnf::CNF; maxiters = 5000, \u03f5::Float64 = 1e-4,\n            method = :reinforcement, #[:reinforcement, :decimation]\n            r::Float64 = 0., rstep::Float64= 0.001,\n            \u03b3::Float64 = 0., \u03b3step::Float64=0.,\n            \u03b3max = 0.5,\n            altsolv::Bool = true,\n            seed::Int = -1)\n\n\n\n\nTry to solve an instance of boolean satisfiability problem.\n\n\nsource", 
+            "text": "Solvers\n\n\n#\n\n\nSAT.solve\n \n \nMethod\n.\n\n\nsolve(cnf::CNF; maxiters = 5000, \u03f5::Float64 = 1e-4,\n            method = :reinforcement, #[:reinforcement, :decimation]\n            r::Float64 = 0., rstep::Float64= 0.001,\n            \u03b3::Float64 = 0., \u03b3step::Float64=0.,\n            \u03b3max = 0.5,\n            altsolv::Bool = true,\n            seed::Int = -1)\n\n\n\n\nTry to solve an instance of boolean satisfiability problem.\n\n\nsource", 
             "title": "Solvers"
         }, 
         {
             "location": "/solvers/#solvers", 
-            "text": "#  SAT.energy     Method .  energy(cnf, \u03c3)  Counts the number of violated clauses.  source  #  SAT.solve     Method .  solve(cnf::CNF; maxiters = 5000, \u03f5::Float64 = 1e-4,\n            method = :reinforcement, #[:reinforcement, :decimation]\n            r::Float64 = 0., rstep::Float64= 0.001,\n            \u03b3::Float64 = 0., \u03b3step::Float64=0.,\n            \u03b3max = 0.5,\n            altsolv::Bool = true,\n            seed::Int = -1)  Try to solve an instance of boolean satisfiability problem.  source", 
+            "text": "#  SAT.solve     Method .  solve(cnf::CNF; maxiters = 5000, \u03f5::Float64 = 1e-4,\n            method = :reinforcement, #[:reinforcement, :decimation]\n            r::Float64 = 0., rstep::Float64= 0.001,\n            \u03b3::Float64 = 0., \u03b3step::Float64=0.,\n            \u03b3max = 0.5,\n            altsolv::Bool = true,\n            seed::Int = -1)  Try to solve an instance of boolean satisfiability problem.  source", 
             "title": "Solvers"
         }
     ]
