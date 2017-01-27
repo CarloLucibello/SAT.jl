@@ -7,20 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <meta name="author" content="Carlo Lucibello">
-  
-  <title>Formulas - SAT.jl</title>
-  
-
   <link rel="shortcut icon" href="../img/favicon.ico">
-
-  
+  <title>Formulas - SAT.jl</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="../css/highlight.css">
   <link href="../assets/Documenter.css" rel="stylesheet">
-
   
   <script>
     // Current page data
@@ -31,11 +25,7 @@
   
   <script src="../js/jquery-2.1.1.min.js"></script>
   <script src="../js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="../js/highlight.pack.js"></script>
-  <script src="../js/theme.js"></script> 
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
-  <script src="../assets/mathjaxhelper.js"></script>
-
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
   
 </head>
 
@@ -55,7 +45,7 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        <ul class="current">
+	<ul class="current">
           
             <li>
     <li class="toctree-l1 ">
@@ -110,9 +100,8 @@
     <li>Formulas</li>
     <li class="wy-breadcrumbs-aside">
       
-        
-          <a href="https://github.com/CarloLucibello/SAT.jl/" class="icon icon-github"> Edit on GitHub</a>
-        
+        <a href="https://github.com/CarloLucibello/SAT.jl/edit/master/docs/formulas.md"
+          class="icon icon-github"> Edit on GitHub</a>
       
     </li>
   </ul>
@@ -126,7 +115,7 @@
 <p><a id='SAT.CNF' href='#SAT.CNF'>#</a>
 <strong><code>SAT.CNF</code></strong> &mdash; <em>Type</em>.</p>
 <p>A type representing a conjunctive normal form.</p>
-<p><a target='_blank' href='https://github.com/CarloLucibello/SAT.jl/tree/fc1d5172b6e23929532338a1083c94947d0523f3/src/cnf.jl#L1-L3' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/CarloLucibello/SAT.jl/tree/93a8f32998255fc76fd307b313374e77133c69b8/src/cnf.jl#L1-L3' class='documenter-source'>source</a><br></p>
 <p><a id='SAT.randomcnf-Tuple{}' href='#SAT.randomcnf-Tuple{}'>#</a>
 <strong><code>SAT.randomcnf</code></strong> &mdash; <em>Method</em>.</p>
 <pre><code>randomcnf(; N=100, k=3, α=0.1, seed=-1, planted = Vector{Vector{Int}}())
@@ -134,21 +123,21 @@
 
 <p>Generates a random instance of the k-SAT problem, with <code>N</code> variables and <code>αN</code> clauses.</p>
 <p>Any configuration in <code>planted</code> is guaranteed to be a solution of the problem.</p>
-<p><a target='_blank' href='https://github.com/CarloLucibello/SAT.jl/tree/fc1d5172b6e23929532338a1083c94947d0523f3/src/cnf.jl#L16-L23' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/CarloLucibello/SAT.jl/tree/93a8f32998255fc76fd307b313374e77133c69b8/src/cnf.jl#L16-L23' class='documenter-source'>source</a><br></p>
 <p><a id='SAT.readcnf-Tuple{String}' href='#SAT.readcnf-Tuple{String}'>#</a>
 <strong><code>SAT.readcnf</code></strong> &mdash; <em>Method</em>.</p>
 <pre><code>readcnf(fname::String)
 </code></pre>
 
 <p>Reads a CNF from file <code>fname</code>.</p>
-<p><a target='_blank' href='https://github.com/CarloLucibello/SAT.jl/tree/fc1d5172b6e23929532338a1083c94947d0523f3/src/cnf.jl#L50-L54' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/CarloLucibello/SAT.jl/tree/93a8f32998255fc76fd307b313374e77133c69b8/src/cnf.jl#L50-L54' class='documenter-source'>source</a><br></p>
 <p><a id='SAT.writecnf-Tuple{String,SAT.CNF}' href='#SAT.writecnf-Tuple{String,SAT.CNF}'>#</a>
 <strong><code>SAT.writecnf</code></strong> &mdash; <em>Method</em>.</p>
 <pre><code>writecnf(fname::String, cnf::CNF)
 </code></pre>
 
 <p>Writes <code>cnf</code> to file <code>fname</code>.</p>
-<p><a target='_blank' href='https://github.com/CarloLucibello/SAT.jl/tree/fc1d5172b6e23929532338a1083c94947d0523f3/src/cnf.jl#L69-L73' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/CarloLucibello/SAT.jl/tree/93a8f32998255fc76fd307b313374e77133c69b8/src/cnf.jl#L69-L73' class='documenter-source'>source</a><br></p>
               
             </div>
           </div>
@@ -178,10 +167,10 @@
       </div>
 
     </section>
-
+    
   </div>
 
-<div class="rst-versions" role="note" style="cursor: pointer">
+  <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
           <a href="https://github.com/CarloLucibello/SAT.jl/" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
@@ -194,6 +183,9 @@
       
     </span>
 </div>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+      <script src="../assets/mathjaxhelper.js"></script>
 
 </body>
 </html>
