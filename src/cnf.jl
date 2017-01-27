@@ -82,3 +82,23 @@ function writecnf(fname::String, cnf::CNF)
     end
     close(f)
 end
+
+"""
+    energy(cnf, σ)
+
+Counts the number of violated clauses.
+"""
+function energy(cnf::CNF, σ::Vector{Int})
+    E = 0
+    for c in cnf.clauses
+        issatisfied = false
+        for i in c
+            if sign(i) == σ[abs(i)]
+                issatisfied = true
+                break
+            end
+        end
+        E += issatisfied ? 0 : 1
+    end
+    E
+end
