@@ -102,3 +102,17 @@ function energy(cnf::CNF, σ::Vector{Int})
     end
     E
 end
+
+"""
+    adjlist(cnf::CNF)
+
+Returns a vector containing for each variable a vector of the adjacent clause indexes.
+"""
+function adjlist(cnf::CNF)
+    adj = Vector{Vector{Int}}(cnf.N)
+    for (μ,c) in enumerate(cnf.clause)
+        for i in c
+            push!(adj[abs(i)], μ)
+        end
+    end
+end
