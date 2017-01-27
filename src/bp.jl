@@ -1,13 +1,11 @@
 using ExtractMacro
 
-Base.getindex(p::Ptr) = unsafe_load(p)
-Base.setindex!{T}(p::Ptr{T}, x::T) = unsafe_store!(p, x)
-Base.show(io::IO, p::Ptr) = show(io, p[])
-Base.show(p::Ptr) = show(p[])
+@inline Base.getindex(p::Ptr) = unsafe_load(p)
+@inline Base.setindex!{T}(p::Ptr{T}, x::T) = unsafe_store!(p, x)
 
 typealias MessU Float64  # ̂ν(a→i) = P(σ_i != J_ai)
 typealias MessH Float64 #  ν(i→a) = P(σ_i != J_ai)
-getref(v::Vector, i::Integer) = pointer(v, i)
+@inline getref(v::Vector, i::Integer) = pointer(v, i)
 
 typealias PU Ptr{MessU}
 typealias PH Ptr{MessH}
@@ -140,14 +138,14 @@ function update!(f::Fact)
     η = 1.
     eps = 1e-15
     nzeros = 0
-    for i=1:deg(f)
+    @inbounds for i=1:deg(f)
         if πlist[i] > eps
             η *= πlist[i]
         else
             nzeros+=1
         end
     end
-    for i=1:deg(f)
+    @inbounds for i=1:deg(f)
         if nzeros == 0
             ηi = η / πlist[i]
         elseif nzeros == 1 && πlist[i] < eps
@@ -231,7 +229,7 @@ function update!(v::Var, r::Float64 = 0., tγ::Float64 = 0.)
     πp, πm = πpm(v)
 
     ### compute cavity fields
-    for i=1:degp(v)
+    @inbounds for i=1:degp(v)
         πpi = πp / ηlistp[i]
         πpi /= (πpi + πm)
         old = πlistp[i][]
@@ -239,7 +237,7 @@ function update!(v::Var, r::Float64 = 0., tγ::Float64 = 0.)
         Δ = max(Δ, abs(πpi- old))
     end
 
-    for i=1:degm(v)
+    @inbounds for i=1:degm(v)
         πmi = πm / ηlistm[i]
         πmi /= (πp + πmi)
         old = πlistm[i][]

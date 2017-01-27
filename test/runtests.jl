@@ -1,3 +1,4 @@
+include("../src/SAT.jl")
 using SAT
 using Base.Test
 
