@@ -52,12 +52,12 @@
         }, 
         {
             "location": "/solvers/", 
-            "text": "Solvers\n\n\n#\n\n\nSAT.solve\n \n \nMethod\n.\n\n\nsolve(cnf::CNF; maxiters = 5000, \u03f5::Float64 = 1e-4,\n            method = :reinforcement, #[:reinforcement, :decimation]\n            r::Float64 = 0., rstep::Float64= 0.001,\n            \u03b3::Float64 = 0., \u03b3step::Float64=0.,\n            \u03b3max = 0.5,\n            altsolv::Bool = true,\n            seed::Int = -1)\n\n\n\n\nTry to solve an instance of boolean satisfiability problem.\n\n\nsource", 
+            "text": "Solvers", 
             "title": "Solvers"
         }, 
         {
             "location": "/solvers/#solvers", 
-            "text": "#  SAT.solve     Method .  solve(cnf::CNF; maxiters = 5000, \u03f5::Float64 = 1e-4,\n            method = :reinforcement, #[:reinforcement, :decimation]\n            r::Float64 = 0., rstep::Float64= 0.001,\n            \u03b3::Float64 = 0., \u03b3step::Float64=0.,\n            \u03b3max = 0.5,\n            altsolv::Bool = true,\n            seed::Int = -1)  Try to solve an instance of boolean satisfiability problem.  source", 
+            "text": "", 
             "title": "Solvers"
         }
     ]
