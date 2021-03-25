@@ -1,27 +1,25 @@
-using ExtractMacro
-
 @inline Base.getindex(p::Ptr) = unsafe_load(p)
-@inline Base.setindex!{T}(p::Ptr{T}, x::T) = unsafe_store!(p, x)
+@inline Base.setindex!(p::Ptr{T}, x::T) where T = unsafe_store!(p, x)
 
-typealias MessU Float64  # ̂ν(a→i) = P(σ_i != J_ai)
-typealias MessH Float64 #  ν(i→a) = P(σ_i != J_ai)
+const MessU = Float64  # ̂ν(a→i) = P(σ_i != J_ai)
+const MessH = Float64 #  ν(i→a) = P(σ_i != J_ai)
 @inline getref(v::Vector, i::Integer) = pointer(v, i)
 
-typealias PU Ptr{MessU}
-typealias PH Ptr{MessH}
+const PU = Ptr{MessU}
+const PH = Ptr{MessH}
 
-typealias VU Vector{MessU}
-typealias VH Vector{MessH}
-typealias VRU Vector{PU}
-typealias VRH Vector{PH}
+const VU = Vector{MessU}
+const VH = Vector{MessH}
+const VRU = Vector{PU}
+const VRH = Vector{PH}
 
-type Fact
+mutable struct Fact
     πlist::Vector{MessH}
     ηlist::VRU
 end
 Fact() = Fact(VH(), VRU())
 
-type Var
+mutable struct Var
     pinned::Int
     ηlistp::Vector{MessU}
     ηlistm::Vector{MessU}
@@ -35,8 +33,9 @@ end
 
 Var() = Var(0, VU(),VU(), VRH(), VRH(), 1., 1.)
 
-abstract FactorGraph
-type FactorGraphKSAT <: FactorGraph
+abstract type FactorGraph end
+
+struct FactorGraphKSAT <: FactorGraph
     N::Int
     M::Int
     fnodes::Vector{Fact}
@@ -44,7 +43,7 @@ type FactorGraphKSAT <: FactorGraph
     cnf::CNF
 
     function FactorGraphKSAT(cnf::CNF)
-        @extract cnf M N clauses
+        @extract cnf: M N clauses
         println("# read CNF formula")
         println("# N=$N M=$M α=$(M/N)")
         fnodes = [Fact() for i=1:M]
@@ -77,7 +76,7 @@ type FactorGraphKSAT <: FactorGraph
         for (a, clause) in enumerate(clauses)
             for id in clause
                 i = abs(id)
-                assert(id != 0)
+                @assert id != 0
                 f = fnodes[a]
                 v = vnodes[i]
                 if id > 0
@@ -99,13 +98,14 @@ type FactorGraphKSAT <: FactorGraph
     end
 end
 
-type ReinfParams
+mutable struct ReinfParams
     r::Float64
     rstep::Float64
     γ::Float64
     γstep::Float64
     tγ::Float64
     wait_count::Int
+
     ReinfParams(r=0.,rstep=0.,γ=0.,γstep=0.) = new(r, rstep, γ, γstep, tanh(γ))
 end
 

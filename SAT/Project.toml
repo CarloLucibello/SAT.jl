@@ -1,0 +1,4 @@
+name = "SAT"
+uuid = "3930e311-805f-429a-9983-c4d07250b587"
+authors = ["Carlo Lucibello <carlo.lucibello@gmail.com>"]
+version = "0.1.0"

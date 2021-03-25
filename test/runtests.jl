@@ -1,6 +1,5 @@
-include("../src/SAT.jl")
 using SAT
-using Base.Test
+using Test
 
 cnf = CNF([[1, -5, 4], [-1, 5, 3, 4], [-3, -4]])
 @test cnf.M == 3
