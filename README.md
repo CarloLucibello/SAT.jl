@@ -40,7 +40,7 @@ cnf = randomcnf(N=1000, k=4, α=0.5, seed=17)
 ### BP + reinforcement (default)
 
 Solve random instance with Belief Propagation (BP) inspired procedures.
-`r` is the initial value of the reinforcement parameter (`r=0.` default).
+`r` is the initial value of the reinforcement parameter (`r=0` default).
 `rstep` determines its moltiplicative increment.
 
 ```julia
