@@ -1,8 +1,10 @@
 module SAT
+using Random
+using ExtractMacro
+using Printf
 
-export solve, energy
-
-export CNF, randomcnf, readcnf, writecnf
+export solve, energy,
+        CNF, randomcnf, readcnf, writecnf
 
 include("cnf.jl")
 include("belief_propagation.jl")

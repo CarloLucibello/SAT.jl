@@ -1,7 +1,7 @@
 """
 A type representing a conjunctive normal form.
 """
-type CNF
+struct CNF
     N::Int
     M::Int
     clauses::Vector{Vector{Int}}
@@ -9,7 +9,7 @@ end
 
 function CNF(clauses::Vector{Vector{Int}})
     M = length(clauses)
-    N = maximum(maximum.(abs.(clauses)))
+    N = maximum(maximum(abs.(c)) for c in clauses)
     return CNF(N, M, clauses)
 end
 
@@ -23,7 +23,7 @@ Any configuration in `planted` is guaranteed to be a solution of the problem.
 """
 function randomcnf(; N::Int = 100, k::Int = 3, α::Float64 = 0.1, seed::Int=-1,
                     planted = Vector{Vector{Int}}())
-    seed > 0 && srand(seed)
+    seed > 0 && Random.seed!(seed)
     M = round(Int, N*α)
     clauses = Vector{Vector{Int}}()
     for p in planted
@@ -110,7 +110,7 @@ Returns a vector containing for each variable a vector of the adjacent clause in
 """
 function adjlist(cnf::CNF)
     adj = Vector{Vector{Int}}(cnf.N)
-    for (μ,c) in enumerate(cnf.clause)
+    for (μ, c) in enumerate(cnf.clauses)
         for i in c
             push!(adj[abs(i)], μ)
         end

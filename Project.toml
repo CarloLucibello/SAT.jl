@@ -1,0 +1,19 @@
+name = "SAT"
+uuid = "3930e311-805f-429a-9983-c4d07250b587"
+version = "0.1.0"
+
+[deps]
+ExtractMacro = "f86d3d12-fd5b-522c-99e9-61577282a1e9"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[compat]
+ExtractMacro = "1.0"
+julia = "1.6"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
