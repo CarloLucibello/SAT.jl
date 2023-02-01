@@ -142,7 +142,7 @@ function update!(f::Fact)
         if πlist[i] > eps
             η *= πlist[i]
         else
-            nzeros+=1
+            nzeros += 1
         end
     end
     @inbounds for i=1:deg(f)
@@ -154,7 +154,7 @@ function update!(f::Fact)
             ηi = 0.
         end
         dump = 0.5
-        ηlist[i][] = dump*ηlist[i][] +(1-dump) *(1 - ηi)
+        ηlist[i][] = dump * ηlist[i][] +(1-dump) * (1 - ηi)
     end
 end
 
