@@ -154,7 +154,7 @@ function update!(f::Fact)
             ηi = 0.
         end
         dump = 0.5
-        ηlist[i][] = dump * ηlist[i][] +(1-dump) * (1 - ηi)
+        ηlist[i][] = dump * ηlist[i][] +(1-dump) * (1 - ηi)/(2-ηi)
     end
 end
 
@@ -226,20 +226,20 @@ function update!(v::Var, r::Float64 = 0., tγ::Float64 = 0.)
     @extract v ηlistp ηlistm πlistp πlistm
     Δ = 0.
     ### compute total fields
-    πp, πm = πpm(v)
+    πp, πm, fπp, fπm = πpm(v)
 
     ### compute cavity fields
     @inbounds for i=1:degp(v)
-        πpi = πp / ηlistp[i]
-        πpi /= (πpi + πm)
+        πpi = (πp / ηlistp[i])*fπm
+        πpi /= (πpi*fπm + πm*fπp/(1-ηlistp[i]))
         old = πlistp[i][]
         πlistp[i][] = πpi
         Δ = max(Δ, abs(πpi- old))
     end
 
     @inbounds for i=1:degm(v)
-        πmi = πm / ηlistm[i]
-        πmi /= (πp + πmi)
+        πmi = (πm / ηlistm[i])*fπp
+        πmi /= (πp*fπm/(1-ηlistm[i]) + πmi*fπp)
         old = πlistm[i][]
         πlistm[i][] = πmi
         Δ = max(Δ, abs(πmi- old))
@@ -357,16 +357,23 @@ function πpm(v::Var)
     for η in ηlistm
         πm *= η
     end
+    fπp = 1.
+    for η in ηlistp
+        fπp *= (1-η)                                                       
+    end
+    fπm = 1.
+    for η in ηlistm                                                                     fπm *= (1-η)
+    end
     # (nzp > 0 && nzm > 0) && exit("contradiction")
     πp *= v.ηreinfp
     πm *= v.ηreinfm
 
-    return πp, πm
+    return πp, πm, fπp, fπm
 end
 
 function mag(v::Var)
     ispinned(v) && return float(v.pinned)
-    πp, πm = πpm(v)
+    πp, πm, fπp, fπm = πpm(v)
     m = (πp - πm) / (πm + πp)
     @assert isfinite(m)
     return m
@@ -374,7 +381,7 @@ end
 
 function mag_noreinf(v::Var)
     ispinned(v) && return float(v.pinned)
-    πp, πm = πpm(v)
+    πp, πm, fπp, fπm = πpm(v)
     πp /= v.ηreinfp
     πm /= v.ηreinfm
     m = (πp - πm) / (πm + πp)
