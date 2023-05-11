@@ -1,8 +1,11 @@
 @inline Base.getindex(p::Ptr) = unsafe_load(p)
 @inline Base.setindex!(p::Ptr{T}, x::T) where T = unsafe_store!(p, x)
 
-const MessU = Float64  # ̂ν(a→i) = P(σ_i != J_ai)
-const MessH = Float64 #  ν(i→a) = P(σ_i != J_ai)
+# ζ̂(a→i) = P(σ_i != J_ai)
+# ζ(i→a) = P(σ_i != J_ai)
+
+const MessU = Float64  # = ζ̂(a→i) = P(σ_i != J_ai)
+const MessH = Float64  # = ζ(i→a) = P(σ_i != J_ai)
 @inline getref(v::Vector, i::Integer) = pointer(v, i)
 
 const PU = Ptr{MessU}
@@ -14,21 +17,22 @@ const VRU = Vector{PU}
 const VRH = Vector{PH}
 
 mutable struct Fact
-    πlist::Vector{MessH}
-    ηlist::VRU
+    ζlist::Vector{MessH} # incoming messages
+    ζ̂list::VRU           # outgoing messages
 end
 Fact() = Fact(VH(), VRU())
 
+# 
 mutable struct Var
     pinned::Int
-    ηlistp::Vector{MessU}
-    ηlistm::Vector{MessU}
-    πlistp::VRH
-    πlistm::VRH
+    ζ̂listp::Vector{MessU}
+    ζ̂listm::Vector{MessU}
+    ζlistp::VRH
+    ζlistm::VRH
 
     #used only in BP+reinforcement
-    ηreinfp::MessU
-    ηreinfm::MessU
+    ζreinfp::MessU
+    ζreinfm::MessU
 end
 
 Var() = Var(0, VU(),VU(), VRH(), VRH(), 1., 1.)
@@ -63,14 +67,14 @@ struct FactorGraphKSAT <: FactorGraph
 
         ## Reserve memory in order to avoid invalidation of Refs
         for (a,f) in enumerate(fnodes)
-            sizehint!(f.πlist, kf[a])
-            sizehint!(f.ηlist, kf[a])
+            sizehint!(f.ζlist, kf[a])
+            sizehint!(f.ζ̂list, kf[a])
         end
         for (i,v) in enumerate(vnodes)
-            sizehint!(v.ηlistm, kvm[i])
-            sizehint!(v.ηlistp, kvp[i])
-            sizehint!(v.πlistm, kvm[i])
-            sizehint!(v.πlistp, kvp[i])
+            sizehint!(v.ζ̂listm, kvm[i])
+            sizehint!(v.ζ̂listp, kvp[i])
+            sizehint!(v.ζlistm, kvm[i])
+            sizehint!(v.ζlistp, kvp[i])
         end
 
         for (a, clause) in enumerate(clauses)
@@ -80,17 +84,17 @@ struct FactorGraphKSAT <: FactorGraph
                 f = fnodes[a]
                 v = vnodes[i]
                 if id > 0
-                    push!(v.ηlistm, MessU(0.))
-                    push!(f.ηlist, getref(v.ηlistm,length(v.ηlistm)))
+                    push!(v.ζ̂listm, MessU(0.))
+                    push!(f.ζ̂list, getref(v.ζ̂listm,length(v.ζ̂listm)))
 
-                    push!(f.πlist, MessH(0.))
-                    push!(v.πlistm, getref(f.πlist,length(f.πlist)))
+                    push!(f.ζlist, MessH(0.))
+                    push!(v.ζlistm, getref(f.ζlist,length(f.ζlist)))
                 else
-                    push!(v.ηlistp, MessU(0.))
-                    push!(f.ηlist, getref(v.ηlistp,length(v.ηlistp)))
+                    push!(v.ζ̂listp, MessU(0.))
+                    push!(f.ζ̂list, getref(v.ζ̂listp,length(v.ζ̂listp)))
 
-                    push!(f.πlist, MessH(0.))
-                    push!(v.πlistp, getref(f.πlist,length(f.πlist)))
+                    push!(f.ζlist, MessH(0.))
+                    push!(v.ζlistp, getref(f.ζlist,length(f.ζlist)))
                 end
             end
         end
@@ -109,52 +113,51 @@ mutable struct ReinfParams
     ReinfParams(r=0.,rstep=0.,γ=0.,γstep=0.) = new(r, rstep, γ, γstep, tanh(γ))
 end
 
-deg(f::Fact) = length(f.ηlist)
-degp(v::Var) = length(v.ηlistp)
-degm(v::Var) = length(v.ηlistm)
+deg(f::Fact) = length(f.ζ̂list)
+degp(v::Var) = length(v.ζ̂listp)
+degm(v::Var) = length(v.ζ̂listm)
 
 function initrand!(g::FactorGraphKSAT)
     for f in g.fnodes
         for k=1:deg(f)
-            f.πlist[k] = rand()
+            f.ζlist[k] = rand()
         end
     end
     for v in g.vnodes
         for k=1:degp(v)
             r = 0.5*rand()
-            v.ηlistp[k] = 1 - (1-2r)/(1-r)
+            v.ζ̂listp[k] = 1 - (1-2r)/(1-r)
         end
         for k=1:degm(v)
             r = 0.5*rand()
-            v.ηlistm[k] = 1 - (1-2r)/(1-r)
+            v.ζ̂listm[k] = 1 - (1-2r)/(1-r)
         end
-        v.ηreinfm = 1
-        v.ηreinfp = 1
+        v.ζreinfm = 1
+        v.ζreinfp = 1
     end
 end
 
-function update!(f::Fact)
-    @extract f ηlist πlist
-    η = 1.
+function update!(f::Fact, dump=0.5)
+    @extract f ζ̂list ζlist
+    ζ̂tot = 1.
     eps = 1e-15
     nzeros = 0
     @inbounds for i=1:deg(f)
-        if πlist[i] > eps
-            η *= πlist[i]
+        if ζlist[i] > eps
+            ζ̂tot *= ζlist[i]
         else
             nzeros += 1
         end
     end
     @inbounds for i=1:deg(f)
         if nzeros == 0
-            ηi = η / πlist[i]
-        elseif nzeros == 1 && πlist[i] < eps
-            ηi = η
+            ζ̂i = ζ̂tot / ζlist[i]
+        elseif nzeros == 1 && ζlist[i] < eps
+            ζ̂i = ζ̂tot
         else
-            ηi = 0.
+            ζ̂i = 0.
         end
-        dump = 0.5
-        ηlist[i][] = dump * ηlist[i][] +(1-dump) * (1 - ηi)
+        ζ̂list[i][] = dump * ζ̂list[i][] +(1-dump) * (1 - ζ̂i)/(2-ζ̂i)
     end
 end
 
@@ -162,15 +165,15 @@ setfree!(v::Var) = v.pinned = 0
 
 function setpinned!(v::Var, σ::Int)
     #TODO check del denominatore=0
-    @extract v  πlistp πlistm
+    @extract v  ζlistp ζlistm
     v.pinned = σ
     ### compute cavity fields
     for i=1:degp(v)
-        πlistp[i][] = σ > 0 ? 1. : 0.
+        ζlistp[i][] = σ > 0 ? 1. : 0.
     end
 
     for i=1:degm(v)
-        πlistm[i][] = σ > 0 ? 0. : 1.
+        ζlistm[i][] = σ > 0 ? 0. : 1.
     end
 end
 
@@ -223,60 +226,63 @@ end
 function update!(v::Var, r::Float64 = 0., tγ::Float64 = 0.)
     #TODO check del denominatore=0
     ispinned(v) && return 0.
-    @extract v ηlistp ηlistm πlistp πlistm
+    @extract v ζ̂listp ζ̂listm ζlistp ζlistm
     Δ = 0.
     ### compute total fields
-    πp, πm = πpm(v)
+    πp, πm, fπp, fπm = πpm(v)
+
+    @assert πm >= 0 && πp >= 0
 
     ### compute cavity fields
     @inbounds for i=1:degp(v)
-        πpi = πp / ηlistp[i]
-        πpi /= (πpi + πm)
-        old = πlistp[i][]
-        πlistp[i][] = πpi
+        πpi = (πp / ζ̂listp[i])*fπm
+        πpi /= (πpi*fπm + πm*fπp/(1-ζ̂listp[i]))
+        old = ζlistp[i][]
+        ζlistp[i][] = πpi
         Δ = max(Δ, abs(πpi- old))
     end
 
     @inbounds for i=1:degm(v)
-        πmi = πm / ηlistm[i]
-        πmi /= (πp + πmi)
-        old = πlistm[i][]
-        πlistm[i][] = πmi
+        πmi = (πm / ζ̂listm[i])*fπp
+        πmi /= (πp*fπm/(1-ζ̂listm[i]) + πmi*fπp)
+        old = ζlistm[i][]
+        ζlistm[i][] = πmi
         Δ = max(Δ, abs(πmi- old))
     end
+
     ###############
 
     if tγ == 0.
         #### reinforcement ######
         #TODO togliere l'if simmetrizzando
         # mi sembra che moltiplicare tutto per πm^r o πp^r  sia lecito, e quindi resterebbe
-        # v.ηreinfp = πp^r
-        # v.ηreinfm = πm^r
+        # v.ζreinfp = πp^r
+        # v.ζreinfm = πm^r
         #
         # In ogni caso da rincontrollare.
         # stesso discorso vale per lo pseudo-reinforcement più sotto.
         # Perché l'ho messo così? problemi numerici?
         if πp < πm
-            v.ηreinfp = (πp/πm)^r
-            v.ηreinfm = 1
+            v.ζreinfp = (πp/πm)^r
+            v.ζreinfm = 1
         else
-            v.ηreinfm = (πm/πp)^r
-            v.ηreinfp = 1
+            v.ζreinfm = (πm/πp)^r
+            v.ζreinfp = 1
         end
     else
         #### pseudo-reinforcement ######
-        πpR = πp / v.ηreinfp
-        πmR = πm / v.ηreinfm
+        πpR = πp / v.ζreinfp
+        πmR = πm / v.ζreinfm
         mγ = (πpR-πmR) / (πpR+πmR) * tγ
         pp = (1+mγ)^r
         mm = (1-mγ)^r
         mR = tγ * (pp-mm) / (pp+mm)
         if πp < πm
-            v.ηreinfp = (1 + mR) / (1 - mR)
-            v.ηreinfm = 1
+            v.ζreinfp = (1 + mR) / (1 - mR)
+            v.ζreinfm = 1
         else
-            v.ηreinfm = (1 - mR) / (1 + mR)
-            v.ηreinfp = 1
+            v.ζreinfm = (1 - mR) / (1 + mR)
+            v.ζreinfp = 1
         end
     end
     Δ
@@ -318,9 +324,9 @@ end
 getσ(mags::Vector) = Int[1-2signbit(m) for m in mags]
 
 function converge!(g::FactorGraph; maxiters::Int = 100, ϵ::Float64=1e-5
-        , reinfpar=ReinfParams(), altsolv=false, altconv=true,
-        infotime = 10)
+        , reinfpar=ReinfParams(), altsolv=false, altconv=true)
     iters=0
+    infotime = 10
     while iters<maxiters
         iters += 1
         iters % infotime == 0 && print("it=$iters ... ")
@@ -328,6 +334,10 @@ function converge!(g::FactorGraph; maxiters::Int = 100, ϵ::Float64=1e-5
         E = energy(g)
         fp = numpinned(g) / g.N
         iters % infotime == 0 && @printf("r=%.3f γ=%.3f ρ_pin=%f\t  E=%d   \tΔ=%f \n",reinfpar.r,  reinfpar.γ, fp, E, Δ)
+        # σ_noreinf = getσ(mags_noreinf(g))
+        # E_noreinf = energy(g.cnf, σ_noreinf)
+        # @printf("r=%.3f γ=%.3f \t  E=%d   \tE_noreinf=%d   Δ=%f \n",reinfpar.r, reinfpar.γ, E, E_noreinf, Δ)
+        # println(mags(g)[1:10])
         update_reinforcement!(reinfpar)
         if altsolv && E == 0
             println("Found Solution!")
@@ -344,25 +354,33 @@ end
 energy(g::FactorGraphKSAT) = energy(g.cnf, getσ(mags(g)))
 
 function πpm(v::Var)
-    @extract v ηlistp ηlistm
+    @extract v ζ̂listp ζ̂listm
     πp = 1.
-    for η in ηlistp
-        πp *= η
+    for ζ̂ in ζ̂listp
+        πp *= ζ̂
     end
     πm = 1.
-    for η in ηlistm
-        πm *= η
+    for ζ̂ in ζ̂listm
+        πm *= ζ̂
+    end
+    fπp = 1.
+    for ζ̂ in ζ̂listp
+        fπp *= 1 - ζ̂                                                       
+    end
+    fπm = 1.
+    for ζ̂ in ζ̂listm
+        fπm *= 1 - ζ̂
     end
     # (nzp > 0 && nzm > 0) && exit("contradiction")
-    πp *= v.ηreinfp
-    πm *= v.ηreinfm
+    πp *= v.ζ̂reinfp
+    πm *= v.ζ̂reinfm
 
-    return πp, πm
+    return πp, πm, fπp, fπm
 end
 
 function mag(v::Var)
     ispinned(v) && return float(v.pinned)
-    πp, πm = πpm(v)
+    πp, πm, fπp, fπm = πpm(v)
     m = (πp - πm) / (πm + πp)
     @assert isfinite(m)
     return m
@@ -370,9 +388,9 @@ end
 
 function mag_noreinf(v::Var)
     ispinned(v) && return float(v.pinned)
-    πp, πm = πpm(v)
-    πp /= v.ηreinfp
-    πm /= v.ηreinfm
+    πp, πm, fπp, fπm = πpm(v)
+    πp /= v.ζreinfp
+    πm /= v.ζreinfm
     m = (πp - πm) / (πm + πp)
     # @assert isfinite(m)
     return m
@@ -398,17 +416,16 @@ function solve(cnf::CNF; maxiters = 5000, ϵ::Float64 = 1e-4,
                 γ::Float64 = 0., γstep::Float64=0.,
                 γmax = 0.5,
                 altsolv::Bool = true,
-                seed::Int = -1,
-                infotime=10)
+                seed::Int = -1)
     seed > 0 && Random.seed!(seed)
     g = FactorGraphKSAT(cnf)
     initrand!(g)
     E = -1
     if method == :reinforcement
         reinfpar = ReinfParams(r, rstep, γ, γstep)
-        converge!(g; maxiters, ϵ, reinfpar, altsolv, infotime)
+        converge!(g, maxiters=maxiters, ϵ=ϵ, reinfpar=reinfpar, altsolv=altsolv)
     elseif method == :decimation
-        converge!(g; maxiters, ϵ, altsolv)
+        converge!(g, maxiters=maxiters, ϵ=ϵ, altsolv=altsolv)
         while true
             pin_most_biased!(g, r) # r=frac fixed , γ=frac freed
             free_most_frustated!(g, γ) # r=frac fixed , γ=frac freed

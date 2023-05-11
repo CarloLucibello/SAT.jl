@@ -4,11 +4,6 @@ Heuristic algorithms based on message passing for solving large instances of [bo
 Consider using [PicoSAT.jl](https://github.com/jakebolewski/PicoSAT.jl) if you are looking
 for an exact solver.
 
-## Installation
-
-```julia
-Pkg.clone("https://github.com/CarloLucibello/SAT.jl")
-```
 
 ## Basic usage
 

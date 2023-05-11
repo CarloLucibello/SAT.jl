@@ -1,4 +1,4 @@
-module SAT
+module StochasticLocalization
 using Random
 using ExtractMacro
 using Printf

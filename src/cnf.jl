@@ -27,7 +27,7 @@ function randomcnf(; N::Int = 100, k::Int = 3, α::Float64 = 0.1, seed::Int=-1,
     M = round(Int, N*α)
     clauses = Vector{Vector{Int}}()
     for p in planted
-        @assert length(p) == N   "Wrong size for planted configurations ($N != $(lenght(p)) )"
+        @assert length(p) == N   "Wrong size for planted configurations ($N != $(length(p)) )"
     end
     for a=1:M
         while true
