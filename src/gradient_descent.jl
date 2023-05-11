@@ -20,7 +20,7 @@ function solve_gd(cnf::CNF;
                     seed::Int = -1,
                     infotime = 100)
 
-    seed > 0 && srand(seed)
+    seed > 0 && Random.seed!(seed)
     N, M = cnf.N, cnf.M
     h = randn(N)
     Δ = 0.
